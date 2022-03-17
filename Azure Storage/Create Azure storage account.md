@@ -58,3 +58,23 @@ Then we can create the storage account inside the resource group.
 
 # Create blob container
 
+The storage account doesn't hold any data in itself. We will need to create a container for that first. 
+
+<u>Azure Portal</u>
+
+Go to the storage account and click on the *Containers* menu, then click on the *+ Container* button at the top.
+
+- Name: pick a name for the blob container
+- Public access level: Blob (anonymous read for blobs)
+
+Click *Create*.
+
+Open the blob container by clicking on it. Notice the various menus and 
+
+<u>Azure CLI</u>
+
+`az storage container create --name llamaimages --account-name <storage account name> --auth-mode login`
+
+### Upload file
+
+Try and upload a file to the blob container using the Azure Portal. 
