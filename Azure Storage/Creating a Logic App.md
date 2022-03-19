@@ -115,30 +115,32 @@ The *Document* is where we will store the meta data for the Tweet image. It is i
 
 `{`
 
-​	`"blob": "/containername/<tweet user name>+<tweet original tweet id>.jpg",`
+​	`"blob": "/containername/<tweet user name>+<tweet tweet id>.jpg",`
 
-​	`"id": "<tweet original tweet id>",`
+​	`"id": "<tweet tweet id>",`
 
 ​	`"tweettime": ''<tweet created at>",`
 
-​	`"tweeturl": "<tweet OriginalTweet>"`
+​	`"tweeturl": "https://twitter.com/<tweet user name>/status/<tweet Tweet id>"`
 
 `}`
 
 Where the `<tweet>` fields are dynamic fields in your Logic app. 
 
-## Issues
+## Challenges
 
-What are at least two things that could fail with this setup?
+There are at least two things that could fail with this setup.
 
-Language
+- *Llama* is Spanish for "flame", so tweets in Spanish might not talk about llamas. How do you fix this?
 
-Naming of more than one media file.
+- If there is more than one media file for the tweet, there will be an id clash causing the document insert to fail. How would you fix this?
 
-Collecting any kind of images. No filter.
-
-
+- We are collecting all and any kind of images. There is no filter. What could be a solution to this?
 
 ## Bonus Task
 
-VS Code integration
+Now that you have been through the whole thing in the Azure Portal, I should probably tell you that you can use Visual Studio code with Logic Apps too. 
+
+In VS Code, install the extension *Azure Logic Apps (Consumption)*. If you haven't already, also install the *Azure Account* extension, so you can access your Azure account through VS Code. 
+
+Open up your Logic App in VS Code and browse the JSON, which defines it. See if you can connect the code to the visual designer. 
