@@ -63,10 +63,82 @@ We need three more actions to store the media and the meta data for the media: G
 
 ### Get image
 
+We know the url of the image to get, but we don't have the actual file. Yet. We have to make an HTTP request to get the binary stream for the file. Add another action, this time the *HTTP* action. While this action can build up a full HTTP query with parameters, cookies, a custom body and more, we are only going to use the method and URI.
 
+Method: GET
+
+URI: Dynamic field *Current Item* 
+
+That is it. That will request the tweet image using the URI coming from the tweet's media values. 
 
 ### Save image
 
+Now we get to using the blob storage that we created earlier in the workshop. Finally, right? We will use the stream returned from the HTTP request and turn it into a blob in the Azure Storage container. 
 
+Add an action, and search for *blob*. I mean that in itself is excellent. Blob. Anyway, choose the *Create block blob* action. Then configure it like this:
+
+**Storage account name**: Use the dropdown to choose a connection to the existing storage account we created earlier. 
+
+**Path to upload**: This is the path to the container we created such as `/llamaimages`. Don't forget to add the forward slash `/` to make it a qualified path. 
+
+**Blob name:** This should be unique and can be made up of any of the values from the previous steps and standard text. In this case you could use 
+
+​	the *user name* of the tweet `+` *Original tweet id*`.jpg` 
+
+Blob content: This is where we catch the stream from the previous HTTP request. Use the *binary* expression function and add the dynamic content from the *HTTP body*. You should end up with a value like
+
+`binary(body('HTTP'))`
+
+That now creates an image blob and saves it to our storage account. Neat!
 
 ### Save image meta data
+
+We also want to save a bunch of data about the image we are collecting. This meta data will be stored in the Cosmos DB database we created earlier. 
+
+Add an action after the *Create block blob* action in the Logic App, and search for *Cosmos*. Add the Azure Cosmos DB action, and choose the *Create or update record* option. Then fill in the connection details for Cosmos:
+
+**Connection name**: Give the connection a name, such as `llamascrapermetadata`. 
+
+**Authentication type**: Choose *Access Key*. 
+
+**Account ID**: This is the name of the Cosmod DB account.
+
+**Access Key**: Go to the Cosmos DB account (in a separate browser tab) and then go to *Keys* and copy the *Primary Key* value. This is super secret, so don't share it with anyone. It gives anyone access to your data in Cosmos DB.
+
+Then click *Create*. 
+
+When the connection to Cosmos DB is created, it is time to insert data, or a document as it is called. Cosmos DB is a document database, which also means you can insert data in pretty much any format.
+
+For *account name*, *Database ID*, and *Collection ID* us the dropdowns to choose the values corresponding to where you want to store the meta data. 
+
+The *Document* is where we will store the meta data for the Tweet image. It is in JSON format, and will look something like this:
+
+`{`
+
+​	`"blob": "/containername/<tweet user name>+<tweet original tweet id>.jpg",`
+
+​	`"id": "<tweet original tweet id>",`
+
+​	`"tweettime": ''<tweet created at>",`
+
+​	`"tweeturl": "<tweet OriginalTweet>"`
+
+`}`
+
+Where the `<tweet>` fields are dynamic fields in your Logic app. 
+
+## Issues
+
+What are at least two things that could fail with this setup?
+
+Language
+
+Naming of more than one media file.
+
+Collecting any kind of images. No filter.
+
+
+
+## Bonus Task
+
+VS Code integration
