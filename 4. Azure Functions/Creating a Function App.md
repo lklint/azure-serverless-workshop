@@ -126,3 +126,99 @@ We are creating a new Function App so you can see the experience from VS Code. A
 
 To connect to your Azure Cosmos DB account, you must add its connection string to your app settings. You then download the new setting to your *local.settings.json* file so you can connect to your Azure Cosmos DB account when running locally.
 
+Find your Cosmos DB instance in VS Code under the *Databases* section of the Azure menu. Right click it and choose *Copy Connection String*. 
+
+Press F1 to open the command palette in VS Code, then search for and run the command `Azure Functions: Add New Setting...`.
+
+Select the Function App you just created before. Type *CosmosDbConnectionString* for the setting name, then paste in the connection string for the value. 
+
+This is adding the setting to the Azure instance of the Function App. Get it on your local machine as well by again hitting F1 and searching for `Azure Functions: Download Remote Settings...`.
+
+Choose the Function App again and choose to overwrite all the local settings. 
+
+Add the Azure Cosmos DB extension package to the project by running the following command in the *Terminal* window.
+
+`dotnet add package Microsoft.Azure.WebJobs.Extensions.CosmosDB `
+
+We'll need these libraries to communicate with Cosmos DB and get data out and in. 
+
+Add a new file to the project called `image.cs`, which is the type definition for an image record. Add this definition. 
+
+`using Newtonsoft.Json;`
+
+`namespace Workshop.Functions`
+`{`
+    `public class Image`
+    `{`
+        `[JsonProperty("id")]`
+        `public string Id { get; set; }`
+
+​        `[JsonProperty("partitionKey")]`
+​        `public string PartitionKey { get; set; }`
+
+​        `[JsonProperty("blob")]`
+​        `public string Blob { get; set; }`
+​        
+​        `[JsonProperty("tweeturl")]`
+​        `public string TweetUrl { get; set; }`
+​    `}`
+`}`
+
+Then we need to update the function itself to use the Cosmos DB connection and the `Image` type for reference. 
+
+Add the using statement at the top of the function CS file
+
+`using System.Collections.Generic;`
+
+Then we need to change the function code itself. Replace the placeholders with your specific values.
+
+`public static IActionResult Run(`
+
+​      `[HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,`
+
+​      `[CosmosDB(`
+
+​        `databaseName: "<database name>",`
+
+​        `collectionName: "<collection>",`
+
+​        `ConnectionStringSetting = "CosmosDbConnectionString",`
+
+​        `SqlQuery = "SELECT top 2 * FROM items order by items._ts desc")] IEnumerable<Image> images,`
+
+​      `ILogger log)`
+
+​    `{`
+
+​      `log.LogInformation("C# HTTP trigger function processed a request.");`
+
+​      `foreach (Image image in images)`
+
+​      `{`
+
+​        `log.LogInformation(image.Blob);`
+
+​      `}`
+
+​      `return new OkResult();`       
+
+​    `}`
+
+  `}`
+
+Press F5 to compile and run the function. Again, use the URL in the terminal window to execute the Function. You should see the last 2 scraped images in the *Terminal* window, such as 
+
+`[2022-03-21T05:35:33.853Z] /testllama/it_is_a_dog+1505777318186262529.jpg`
+`[2022-03-21T05:35:33.857Z] /testllama/TheBoi23+1505777322074464257.jpg`
+
+# Challenges
+
+Retrieve an image from Azure blob storage based on a Cosmos DB record. 
+
+Hint: use a query parameter in the Function URL to find the Cosmos DB record.
+
+
+
+Display the image on a simple website. The image must be retrieved by an Azure function.
+
+Hint: Use an HTTP trigger with a [Blob input binding](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-blob?tabs=csharp&WT.mc_id=aaronpowell-blog-aapowell#input).
