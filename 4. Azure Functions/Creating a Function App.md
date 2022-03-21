@@ -88,95 +88,41 @@ Click *Save* and open the function code again. Now, get the function URL again a
 
 While you *can* develop your function in the Azure Portal (and there is nothing wrong with that to start with), I prefer to use an IDE like VS Code. 
 
+## Extensions
+
 In VS Code install the *Azure Functions* extension. This will also install the *Azure Functions Core Tools*, which "lets you develop and test your functions on your local computer from the command prompt or terminal." 
+
+Also, install the *Azure Databases* extension, which will let you see the Cosmos DB database inside VS Code.
 
 You should now have a *Functions* section in your Azure section of VS Code. This will connect to your Azure account and show any existing Functions, like the one we just created. However, functions created in the Azure Portal are read only in VS Code. This is to avoid unintentional changes that will create conflicts. 
 
-Instead we will create a local function app that we can push to Azure. In the *Functions* section click on the little icon for *Create New Project...* and choose a local folder on your machine to create it in.
+## Local Function
+
+Instead we will create a local function app that we can push to Azure. In the *Functions* section in VS Code click on the little icon for *Create New Project...* and choose a local folder on your machine to create it in.
 
 Then go through the wizard to create a new function project:
 
-C# -> .NET 6 -> Http Trigger -> Choose namespace -> Anonymous 
+C# -> .NET 6 -> Http trigger -> Choose namespace -> Create function
 
-Replace the HTTP trigger template with the following code:
+Read through the code, and then open the *local.settings.json* local file to see the settings for your Function App. 
 
-``using System;`
+Hit F5 to build and run the function on your local machine. In the *Terminal* window, there should be something similar to this output
 
-`using System.IO;`
+`HttpCosmos: [GET,POST] http://localhost:7071/api/HttpCosmos`
 
-`using System.Threading.Tasks;`
+where `HttpCosmos` is the name you gave the function. The Azure Function runtime is now running on your local machine, hosting the function we just created on that `localhost` address. Copy paste it into your browser. Give it a bash. You can also right-click on the function name in the Azure menu in VS Code and choose *Execute function now*. 
 
-`using Microsoft.AspNetCore.Mvc;`
+It is the same function as we created in the portal (it is a template after all), but now it is on your local machine, with no need for Azure (yet). 
 
-`using Microsoft.Azure.WebJobs;`
+## Push to Azure
 
-`using Microsoft.Azure.WebJobs.Extensions.Http;`
+You should already be signed into Azure in VS Code, but if not, do it now in the left-hand Azure menu.
 
-`using Microsoft.AspNetCore.Http;`
+In your *Functions* section in the Azure menu, press the deploy icon, which looks like an upward arrow going into a cloud. Select the folder and subscription to use. Then select *Create new Function App advanced*. Choose a new unique name for the function app, .NET, Windows, our existing resource group (*azureserverless*), North Europe, Consumption, the existing storage account, skip app insight resource, and then let the new Function App come to life.
 
-`using Microsoft.Extensions.Logging;`
+We are creating a new Function App so you can see the experience from VS Code. Again, you will get a URL to trigger the function from the Output window. Give it a go. 
 
-`using Microsoft.Azure.Documents;`
+## Connecting to Cosmos DB
 
-`using Newtonsoft.Json;`
-
-`using System.Collections.Generic;`
-
-
-
-`namespace Workshop.Function`
-
-`{`
-
-  `public static class CosmosReader`
-
-  `{`
-
-​    `[FunctionName("CosmosTest")]`
-
-​    `public static async Task<IActionResult> Run(`
-
-​      `[HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,`
-
-​      `[CosmosDB(`
-
-​      `databaseName: "llamascraper",`
-
-​      `collectionName: "images",`
-
-​      `SqlQuery = "SELECT top 100 * FROM items order by item._ts desc",`
-
-​      `ConnectionStringSetting = "llamacosmos_DOCUMENTDB")] IEnumerable<Document> images,`       
-
-​      `ILogger log)`
-
-​    `{`
-
-​      `log.LogInformation("C# HTTP trigger function processed a request.");`
-
-​      `if (images is null)`
-
-​      `{`
-
-​        `return new NotFoundResult();`
-
-​      `}`
-
-​      `foreach (var image in images)`
-
-​      `{`
-
-​        `log.LogInformation(image.Id);`
-
-​      `}`
-
-​      `return new OkObjectResult(images);`
-
-​    `}`
-
-  `}`
-
-`}`
-
-Deploy to existing Function App
+To connect to your Azure Cosmos DB account, you must add its connection string to your app settings. You then download the new setting to your *local.settings.json* file so you can connect to your Azure Cosmos DB account when running locally.
 
