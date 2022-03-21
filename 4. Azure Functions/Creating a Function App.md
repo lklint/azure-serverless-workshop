@@ -83,3 +83,100 @@ Click *Run* and the function will compile, spin up a VM to host the function, ru
 Click on *Get function URL*, which will generate the URL to call the function externally from the Internet. Notice there is no function key attached. Go back to the *integration* menu, click on the trigger again and then change the *Authorization level* to *Function*. 
 
 Click *Save* and open the function code again. Now, get the function URL again and notice the `code` query parameter. 
+
+# Visual Studio Code
+
+While you *can* develop your function in the Azure Portal (and there is nothing wrong with that to start with), I prefer to use an IDE like VS Code. 
+
+In VS Code install the *Azure Functions* extension. This will also install the *Azure Functions Core Tools*, which "lets you develop and test your functions on your local computer from the command prompt or terminal." 
+
+You should now have a *Functions* section in your Azure section of VS Code. This will connect to your Azure account and show any existing Functions, like the one we just created. However, functions created in the Azure Portal are read only in VS Code. This is to avoid unintentional changes that will create conflicts. 
+
+Instead we will create a local function app that we can push to Azure. In the *Functions* section click on the little icon for *Create New Project...* and choose a local folder on your machine to create it in.
+
+Then go through the wizard to create a new function project:
+
+C# -> .NET 6 -> Http Trigger -> Choose namespace -> Anonymous 
+
+Replace the HTTP trigger template with the following code:
+
+``using System;`
+
+`using System.IO;`
+
+`using System.Threading.Tasks;`
+
+`using Microsoft.AspNetCore.Mvc;`
+
+`using Microsoft.Azure.WebJobs;`
+
+`using Microsoft.Azure.WebJobs.Extensions.Http;`
+
+`using Microsoft.AspNetCore.Http;`
+
+`using Microsoft.Extensions.Logging;`
+
+`using Microsoft.Azure.Documents;`
+
+`using Newtonsoft.Json;`
+
+`using System.Collections.Generic;`
+
+
+
+`namespace Workshop.Function`
+
+`{`
+
+  `public static class CosmosReader`
+
+  `{`
+
+​    `[FunctionName("CosmosTest")]`
+
+​    `public static async Task<IActionResult> Run(`
+
+​      `[HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,`
+
+​      `[CosmosDB(`
+
+​      `databaseName: "llamascraper",`
+
+​      `collectionName: "images",`
+
+​      `SqlQuery = "SELECT top 100 * FROM items order by item._ts desc",`
+
+​      `ConnectionStringSetting = "llamacosmos_DOCUMENTDB")] IEnumerable<Document> images,`       
+
+​      `ILogger log)`
+
+​    `{`
+
+​      `log.LogInformation("C# HTTP trigger function processed a request.");`
+
+​      `if (images is null)`
+
+​      `{`
+
+​        `return new NotFoundResult();`
+
+​      `}`
+
+​      `foreach (var image in images)`
+
+​      `{`
+
+​        `log.LogInformation(image.Id);`
+
+​      `}`
+
+​      `return new OkObjectResult(images);`
+
+​    `}`
+
+  `}`
+
+`}`
+
+Deploy to existing Function App
+

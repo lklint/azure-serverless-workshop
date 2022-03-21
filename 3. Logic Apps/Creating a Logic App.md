@@ -139,7 +139,7 @@ There are at least two things that could fail with this setup.
 
 ## Bonus Task
 
-Now that you have been through the whole thing in the Azure Portal, I should probably tell you that you can use Visual Studio code with Logic Apps too. 
+Now that you have been through the whole thing in the Azure Portal, I should probably tell you that you can use Visual Studio Code with Logic Apps too. 
 
 In VS Code, install the extension *Azure Logic Apps (Consumption)*. If you haven't already, also install the *Azure Account* extension, so you can access your Azure account through VS Code. 
 
