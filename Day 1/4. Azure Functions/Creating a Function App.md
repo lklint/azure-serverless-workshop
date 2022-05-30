@@ -176,39 +176,41 @@ Add the using statement at the top of the function CS file
 
 Then we need to change the function code itself. Replace the placeholders with your specific values.
 
-`public static IActionResult Run(`
+```c#
+public static IActionResult Run(
 
-​      `[HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,`
+      [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
 
-​      `[CosmosDB(`
+      [CosmosDB(
 
-​        `databaseName: "<database name>",`
+        databaseName: "<database name>",
 
-​        `collectionName: "<collection>",`
+        collectionName: "<collection>",
 
-​        `ConnectionStringSetting = "CosmosDbConnectionString",`
+        ConnectionStringSetting = "CosmosDbConnectionString",
 
-​        `SqlQuery = "SELECT top 2 * FROM items order by items._ts desc")] IEnumerable<Image> images,`
+        SqlQuery = "SELECT top 2 * FROM items order by items._ts desc")] IEnumerable<Image> images,
 
-​      `ILogger log)`
+      ILogger log)
 
-​    `{`
+    {
 
-​      `log.LogInformation("C# HTTP trigger function processed a request.");`
+      log.LogInformation("C# HTTP trigger function processed a request.");
 
-​      `foreach (Image image in images)`
+      foreach (Image image in images)
 
-​      `{`
+      {
 
-​        `log.LogInformation(image.Blob);`
+        log.LogInformation(image.Blob);
 
-​      `}`
+      }
 
-​      `return new OkResult();`       
+      return new OkResult();
 
-​    `}`
+    }
 
-  `}`
+  }
+```
 
 Press F5 to compile and run the function. Again, use the URL in the terminal window to execute the Function. You should see the last 2 scraped images in the *Terminal* window, such as 
 

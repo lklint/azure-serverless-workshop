@@ -115,7 +115,7 @@ The *Document* is where we will store the meta data for the Tweet image. It is i
 
 ```json
 {
-  "blob": "/containername/<tweet user name>+<tweet tweet id>.jpg",
+  "blob": "/<containername>/<tweet user name>+<tweet original tweet id>.jpg",
 
   "id": "<tweet tweet id>",
 
@@ -125,7 +125,7 @@ The *Document* is where we will store the meta data for the Tweet image. It is i
 }
 ```
 
-Where the `<tweet>` fields are dynamic fields in your Logic app. 
+Where the `<tweet>` fields are dynamic fields in your Logic app, and the *containername* is the name of the blob container we store the images in.
 
 ## Challenges
 
