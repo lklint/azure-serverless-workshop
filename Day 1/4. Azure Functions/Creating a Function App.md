@@ -144,25 +144,29 @@ We'll need these libraries to communicate with Cosmos DB and get data out and in
 
 Add a new file to the project called `image.cs`, which is the type definition for an image record. Add this definition. 
 
-`using Newtonsoft.Json;`
+```c#
+using Newtonsoft.Json;
 
-`namespace Workshop.Functions`
-`{`
-    `public class Image`
-    `{`
-        `[JsonProperty("id")]`
-        `public string Id { get; set; }`
+namespace Workshop.Functions
+{
+    public class Image
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
 
-​        `[JsonProperty("partitionKey")]`
-​        `public string PartitionKey { get; set; }`
+        [JsonProperty("partitionKey")]
+        public string PartitionKey { get; set; }
 
-​        `[JsonProperty("blob")]`
-​        `public string Blob { get; set; }`
-​        
-​        `[JsonProperty("tweeturl")]`
-​        `public string TweetUrl { get; set; }`
-​    `}`
-`}`
+        [JsonProperty("blob")]
+        public string Blob { get; set; }
+        
+        [JsonProperty("tweeturl")]
+        public string TweetUrl { get; set; }
+    }
+}
+```
+
+
 
 Then we need to update the function itself to use the Cosmos DB connection and the `Image` type for reference. 
 
