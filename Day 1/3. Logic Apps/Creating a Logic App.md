@@ -113,17 +113,17 @@ For *account name*, *Database ID*, and *Collection ID* us the dropdowns to choos
 
 The *Document* is where we will store the meta data for the Tweet image. It is in JSON format, and will look something like this:
 
-`{`
+```json
+{
+  "blob": "/containername/<tweet user name>+<tweet tweet id>.jpg",
 
-​	`"blob": "/containername/<tweet user name>+<tweet tweet id>.jpg",`
+  "id": "<tweet tweet id>",
 
-​	`"id": "<tweet tweet id>",`
-
-​	`"tweettime": ''<tweet created at>",`
-
-​	`"tweeturl": "https://twitter.com/<tweet user name>/status/<tweet Tweet id>"`
-
-`}`
+  "tweettime": "<tweet created at>",
+  
+  "tweeturl": "https://twitter.com/<tweet user name>/status/<tweet Tweet id>"
+}
+```
 
 Where the `<tweet>` fields are dynamic fields in your Logic app. 
 
