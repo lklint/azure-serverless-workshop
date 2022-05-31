@@ -42,6 +42,8 @@ Click *Next* and leave connectivity for all networks.
 
 Click *Rewiew + Create* then create the Key Vault.
 
+Assign your Azure user the permission of *KeyVault Administrator* to allow you to insert values/secrets/keys into the new vault. 
+
 Enable the system assigned managed identity for the Function App we created earlier.
 
 Assign the *Reader* role to the Function App in your new Key Vault app. 
