@@ -28,3 +28,35 @@ Do the same for the Cosmos DB connection.
 
 ## Azure Key Vault
 
+We will use a Key Vault to store the connection string for Cosmos DB, then retrieve it from there.
+
+Search for *Key Vault* in the Portal and go to the resource section. 
+
+Click *+ Create* to create a new Key Vault.
+
+Fill in the Basic information, which by now should be familiar. Leave pricing tier as *Standard*.
+
+Click *Next* and set the permission model to *Azure role-based access control*, also known as RBAC.
+
+Click *Next* and leave connectivity for all networks. 
+
+Click *Rewiew + Create* then create the Key Vault.
+
+Enable the system assigned managed identity for the Function App we created earlier.
+
+Assign the *Reader* role to the Function App in your new Key Vault app. 
+
+Create a new secret in the Key Vault and store the connection string from your Cosmos DB with name *CosmosDbConnectionString*. 
+
+Click on the new secret to open up its settings and copy the URL to the secret. 
+
+In your Function app, go to the *Configuration* tab and add a new Application Setting. Call it *CosmosDbConnectionString* and give it the value of 
+
+`@Microsoft.KeyVault(SecretUri=<the secret's URL>)` 
+
+### Challenge
+
+Change the Azure Function code to use the Environment variable instead of the static config string
+
+`ConnectionStringSetting = "CosmosDbConnectionString"`
+
