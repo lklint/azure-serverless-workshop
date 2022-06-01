@@ -46,7 +46,7 @@ Assign your Azure user the permission of *KeyVault Administrator* to allow you t
 
 Enable the system assigned managed identity for the Function App we created earlier.
 
-Assign the *Reader* role to the Function App in your new Key Vault app. 
+Assign the *Key Vault Secrets User* role to the Function App in your new Key Vault app. 
 
 Create a new secret in the Key Vault and store the connection string from your Cosmos DB with name *CosmosDbConnectionString*. 
 
